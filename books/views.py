@@ -180,6 +180,9 @@ def ReturnBookView(request,id):
     account.save()
     borrowbook.return_book=True
     borrowbook.save()
+    book = Book.objects.get(pk=borrowbook.book.id)
+    book.quantity += 1
+    book.save()
     messages.success(request, f"Book has been returned Successfully")
     send_returnbook_email(request.user,borrowbook.book,"Return Book Message",'books/return_book_email.html' )
     return redirect("borrow_report")
