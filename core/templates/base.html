@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block head_title %}Mew Library{% endblock %}
+        </title>
+        <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.1/dist/tailwind.min.css">
+        <link rel="icon" href="{% static "mew.png" %}" type="image/x-icon">
+
+        {% block head_extra %}{% endblock %}
+
+        
+    </head>
+<body class="bg-blue-600 min-h-screen flex flex-col">
+        <div class="fixed top-0 left-0 right-0 z-50">
+            {% include 'navbar.html' %}
+        </div>
+        {% block body %}
+            <div class="lg:container lg:mx-auto pt-20 flex-grow" id="main">
+                {% include 'messages.html' %}
+                {% block content %}
+                {% endblock %}
+            </div>
+            {% include 'footer.html' %}
+
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{% block head_title %} Book Details{% endblock %} 
+{% block content %}
+<div class="container mx-auto px-4 py-8 pb-24">
+    <div class="flex flex-col lg:flex-row gap-8 items-start justify-center max-w-6xl mx-auto">
+        <!-- Book Image -->
+        <div class="w-full lg:w-1/2 flex justify-center">
+            <div class="max-w-md w-full">
+                <img src="{{ book.image.url }}" 
+                     class="w-full h-auto rounded-xl shadow-lg object-cover max-h-96" 
+                     alt="{{ book.name }}"/>
+            </div>
+        </div>
+        
+        <!-- Book Details -->
+        <div class="w-full lg:w-1/2">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200">
+                <div class="text-center lg:text-left space-y-6">
+                    <!-- Book Title -->
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 leading-tight">
+                        {{ book.name }}
+                    </h1>
+                    
+                    <!-- Price -->
+                    <div class="flex justify-center lg:justify-start">
+                        <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-xl font-bold border border-blue-200">
+                            ${{ book.price }}
+                        </span>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-semibold text-gray-700">Description:</h3>
+                        <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+                            {{ book.description }}
+                        </p>
+                    </div>
+                    
+                    <!-- Category -->
+                    <div class="flex items-center justify-center lg:justify-start gap-2">
+                        <span class="text-gray-700 font-medium">Category:</span>
+                        <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ book.categories.name }}
+                        </span>
+                    </div>
+                    
+                    {% if request.user.is_authenticated %}
+                    <!-- Action Buttons -->
+                    <div class="pt-4 space-y-3 ">
+                        {%if already_bought %}
+                            <div class="space-y-3 lg:space-x-3 ">
+                                <div class="w-full lg:w-auto inline-block bg-gray-400 text-white font-semibold py-3 px-8 rounded-lg shadow-md text-center cursor-not-allowed opacity-75">
+                                    <span class="flex items-center justify-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Already Borrowed
+                                    </span>
+                                </div>
+                                
+                                <button onclick="openRatingModal()" 
+                                   class="w-full lg:w-auto inline-block bg-orange-600 hover:bg-orange-700 text-black font-semibold py-3 px-5 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg text-center">
+                                    <span class="flex items-center justify-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                        </svg>
+                                        Review Book
+                                    </span>
+                                </button>
+                            </div>
+                        {%else%}
+                            {% if book.quantity > 0 %}
+                            <a href="{% url "buy" book.id %}" 
+                            class="w-full lg:w-auto inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg text-center">
+                                Borrow Now
+                            </a>
+                            {%endif%}
+                        {%endif%}
+                        
+                        {% comment %} <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                            <button class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                                Add to Wishlist
+                            </button>
+                            <button class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                                Borrow Book
+                            </button>
+                        </div> {% endcomment %}
+                    </div>
+                    {% else %}
+                    <!-- Login Required Message -->
+                    <div class="pt-4">
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                            <p class="text-yellow-800 text-sm">
+                                Please <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-medium">login</a> to borrow this book.
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} <h1>{{}}</h1> {% endcomment %}
+
+    
+    <!-- Additional Information Section -->
+    <div class="max-w-6xl mx-auto mt-12">
+        <div class="bg-gray-50 rounded-xl p-6 md:p-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">Book Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-3">
+                    <div class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-700">Title:</span>
+                        <span class="text-gray-600">{{ book.name }}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-700">Price:</span>
+                        <span class="text-gray-600">${{ book.price }}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-700">Category:</span>
+                        <span class="text-gray-600">{{ book.categories.name }}</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-700">Availability:</span>
+                        {% if book.quantity > 0 %}
+                        <span class="text-green-600 font-medium">In Stock</span>
+                        {% else %}
+                        <span class="text-red-600 font-medium">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-700">Format:</span>
+                        <span class="text-gray-600">Physical Book</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-700">Library:</span>
+                        <span class="text-gray-600">Mew Library</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="max-w-6xl mx-auto mt-12">
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">Book Reviews</h2>
+            {% if ratings %}
+                <div class="space-y-6">
+                    {% for rating_val in ratings %}
+                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 font-medium text-sm">
+                                        {{ rating_val.account.user.first_name|first|upper }}{{ rating_val.account.user.last_name|first|upper }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-800">
+                                        {{ rating_val.account.user.first_name }} {{ rating_val.account.user.last_name }}
+                                    </span>
+                                    <div class="text-xs text-gray-500">
+                                        {{ rating_val.created_on|date:"M d, Y" }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} <h1>{{rating_val.rating}}</h1> {% endcomment %}
+                            <div class="flex items-center space-x-1">
+                                {% for i in "12345" %}
+                                    {% if i <= rating_val.rating %}
+                                        <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg class="w-5 h-5 text-gray-300 fill-current" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                        </svg>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <p class="text-gray-700 leading-relaxed">{{ rating_val.body }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z"></path>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
+                    <p class="text-gray-500 mb-4">Be the first to share your thoughts about this book!</p>
+                    {% if request.user.is_authenticated and already_bought %}
+                        <button onclick="openRatingModal()" 
+                                class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                            Write First Review
+                        </button>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Rating Modal -->
+<div id="ratingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+    <div class="relative top-4 sm:top-20 mx-auto p-3 sm:p-5 border w-11/12 sm:w-3/4 lg:w-1/2 max-w-2xl shadow-lg rounded-md bg-white">
+        <!-- Modal Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div class="flex items-center space-x-3 mb-3 sm:mb-0">
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Rate & Review</h3>
+                    <p class="text-sm text-gray-600 truncate max-w-xs sm:max-w-none">{{ book.name }}</p>
+                </div>
+            </div>
+            <button onclick="closeRatingModal()" class="self-end sm:self-auto text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="max-h-96 overflow-y-auto">
+            <form method="post" action="{% url 'details' book.id %}" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Rating Field -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Rating
+                    </label>
+                    <select name="rating" id="modal_rating" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <option value="">Select a rating</option>
+                        <option value="1">⭐ 1 Star</option>
+                        <option value="2">⭐⭐ 2 Stars</option>
+                        <option value="3">⭐⭐⭐ 3 Stars</option>
+                        <option value="4">⭐⭐⭐⭐ 4 Stars</option>
+                        <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+                    </select>
+                </div>
+
+                <!-- Review Body Field -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Your Review
+                    </label>
+                    <textarea name="body" id="modal_body" rows="4" placeholder="Share your thoughts about this book..."
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
+                    <button type="button" onclick="closeRatingModal()" 
+                            class="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-lg bg-blue-600 hover:bg-orange-700 text-white rounded-lg transition-colors duration-200">
+                        Submit Review
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% comment %} <!-- Existing Reviews Section -->
+        <div class="mt-8 border-t border-gray-200 pt-6">
+            <h4 class="text-md font-semibold text-gray-800 mb-4">Recent Reviews</h4>
+            <div class="space-y-3 max-h-40 overflow-y-auto">
+                {% for rating in ratings %}
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-800">
+                            {{ rating.reviewer.first_name }} {{ rating.reviewer.last_name }}
+                        </span>
+                        <div class="flex">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= rating.rating %}
+                                    <span class="text-yellow-400">⭐</span>
+                                {% else %}
+                                    <span class="text-gray-300">⭐</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">{{ rating.body|truncatewords:15 }}</p>
+                </div>
+                {% empty %}
+                <p class="text-sm text-gray-500 text-center py-4">No reviews yet. Be the first to review!</p>
+                {% endfor %}
+            </div>
+        </div> {% endcomment %}
+    </div>
+</div>
+
+<script>
+function openRatingModal() {
+    document.getElementById('ratingModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeRatingModal() {
+    document.getElementById('ratingModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside of it
+document.getElementById('ratingModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeRatingModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeRatingModal();
+    }
+});
+</script>
+
+{% endblock content %}

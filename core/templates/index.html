@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head_title %}Mew Library{% endblock %} 
+
+{% block content %}
+<div class="container mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen py-8 px-4 md:px-6 lg:px-8">
+
+    
+    <div class="flex flex-col w-full lg:w-1/2 justify-center items-start p-6 md:p-8 lg:p-12 bg-white rounded-2xl bg-opacity-100 mx-2 lg:mx-3 mb-8 lg:mb-0">
+        <h1 class="font-bold text-2xl md:text-3xl lg:text-4xl my-4 text-center lg:text-left w-full">Welcome to Mew Library</h1>
+        <p class="leading-normal mb-6 text-sm md:text-base lg:text-lg text-gray-700 text-center lg:text-left">
+            This is a simple Mew Library where you can deposit money, borrow books. You can also create an account, login, logout. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed nemo quaerat quo dicta, adipisci eum fuga ratione id numquam eius veniam placeat voluptatum, itaque tempora molestias vel, blanditiis fugiat ipsam!
+
+        </p>
+        <div class="flex justify-center lg:justify-end w-full">
+            <a href="{% url 'register' %}" class="bg-blue-600 text-white rounded-lg hover:bg-white hover:text-blue-900 hover:border-blue-900 shadow hover:shadow-lg py-3 px-6 md:py-2 md:px-4 border border-gray-900 hover:border-transparent transition-all duration-300 text-sm md:text-base font-medium">Register</a>
+        </div>
+    </div>
+    <div class="w-full lg:w-1/2 flex justify-center items-center px-4 lg:px-6">
+        <img class="rounded-2xl max-w-full h-auto shadow-lg transform hover:scale-105 transition-transform duration-300" src="{% static './img/cat.jpeg' %}" alt="Mew Library"/>
+    </div>
+
+
+</div>
+
+{% comment %} -------------- {% endcomment %}
+<div class="bg-gray-50 py-12 pb-10">
+    <div class="container mx-auto px-4 md:px-6 lg:px-8">
+        
+        <!-- Categories Section -->
+        <div class="mb-12">
+            <h3 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Categories</h3>
+            <div class="bg-white rounded-lg shadow-md p-6 mx-auto max-w-6xl">
+                <!-- Clear Option -->
+                <div class="mb-6 text-center">
+                    <button id="clearCategories" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium">
+                        Clear Selection
+                    </button>
+                </div>
+                
+                <!-- Categories Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                    {% for cat in categories %}
+                    <div class="relative group">
+                        <input class="absolute opacity-0 w-full h-full cursor-pointer z-10" type="radio" name="categoryFilter" id="category-{{cat.id}}" value="{{cat.slug}}" onchange="window.location.href='{% url "categories" cat.slug %}'">
+                        <label class="flex items-center justify-center hover:bg-gradient-to-br hover:from-blue-50 hover:to-blue-100 p-4 rounded-xl transition-all duration-300 border border-gray-200 hover:border-blue-400 cursor-pointer min-h-[80px] bg-white hover:shadow-lg transform hover:-translate-y-1 hover:scale-105 group-hover:ring-2 group-hover:ring-blue-300 group-hover:ring-opacity-50" for="category-{{cat.id}}">
+                            <span class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-all duration-300 text-center group-hover:font-semibold">{{cat.name}}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const clearButton = document.getElementById('clearCategories');
+    const radioButtons = document.querySelectorAll('input[name="categoryFilter"]');
+    
+    clearButton.addEventListener('click', function() {
+        radioButtons.forEach(radio => {
+            radio.checked = false;
+        });
+        
+        // Optional: redirect to show all categories
+        window.location.href = '/'; // Adjust this URL as needed
+    });
+});
+</script>
+
+        <!-- Results Header -->
+        <div class="text-center mb-8">
+            <h3 class="text-xl md:text-2xl font-semibold text-gray-800">Total {{data | length}} Books Found</h3>
+            <div class="w-24 h-1 bg-blue-600 mx-auto mt-3 rounded-full"></div>
+        </div>
+
+        <!-- Books Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for book in data %}
+                <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
+                    <div class="relative">
+                        <img src="{{book.image.url}}" class="w-full h-48 sm:h-56 object-cover" alt="{{book.name}}">
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">${{book.price}}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h5 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600 transition-colors duration-200">{{book.name}}</h5>
+                        
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                            {{book.description | truncatewords:10 }}
+                        </p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium border border-blue-200">{{book.categories.name}}</span>
+                            <span class="text-blue-600 font-bold text-lg">${{book.price}}</span>
+                        </div>
+                        
+                        <a href="{% url "details" book.id %}" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 inline-block text-center">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

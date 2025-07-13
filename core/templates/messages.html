@@ -1,0 +1,140 @@
+{% for message in messages %}
+
+{% if message.tags == 'success' %}
+<div class="bg-green-100 border-t-4 border-green-500 rounded-b text-teal-900 px-4 py-3 shadow-md mt-2 message-alert transition-all duration-500 ease-in-out" role="alert">
+    <div class="flex items-center justify-between">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+            <div>
+                <p class="font-bold">Success!</p>
+                <p class="text-sm">{{ message }}</p>
+            </div>
+        </div>
+        <button class="text-teal-700 hover:text-teal-900 ml-4 close-btn" onclick="closeMessage(this)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+{% elif message.tags == 'error' %}
+<div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md mt-2 message-alert transition-all duration-500 ease-in-out" role="alert">
+    <div class="flex items-center justify-between">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+            <div>
+                <p class="font-bold">Error!</p>
+                <p class="text-sm">{{ message }}</p>
+            </div>
+        </div>
+        <button class="text-red-700 hover:text-red-900 ml-4 close-btn" onclick="closeMessage(this)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+{% elif message.tags == 'warning' %}
+<div class="bg-yellow-100 border-t-4 border-yellow-500 rounded-b text-yellow-900 px-4 py-3 shadow-md mt-2 message-alert transition-all duration-500 ease-in-out" role="alert">
+    <div class="flex items-center justify-between">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+            <div>
+                <p class="font-bold">Warning!</p>
+                <p class="text-sm">{{ message }}</p>
+            </div>
+        </div>
+        <button class="text-yellow-700 hover:text-yellow-900 ml-4 close-btn" onclick="closeMessage(this)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+{% elif message.tags == 'info' %}
+<div class="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md mt-2 message-alert transition-all duration-500 ease-in-out" role="alert">
+    <div class="flex items-center justify-between">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-blue-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+            <div>
+                <p class="font-bold">Info!</p>
+                <p class="text-sm">{{ message }}</p>
+            </div>
+        </div>
+        <button class="text-blue-700 hover:text-blue-900 ml-4 close-btn" onclick="closeMessage(this)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+{% else %}
+<!-- Default message style for unknown types -->
+<div class="bg-gray-100 border-t-4 border-gray-500 rounded-b text-gray-900 px-4 py-3 shadow-md mt-2 message-alert transition-all duration-500 ease-in-out" role="alert">
+    <div class="flex items-center justify-between">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-gray-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+            <div>
+                <p class="font-bold">Notice!</p>
+                <p class="text-sm">{{ message }}</p>
+            </div>
+        </div>
+        <button class="text-gray-700 hover:text-gray-900 ml-4 close-btn" onclick="closeMessage(this)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+{% endif %}
+
+{% endfor %}
+
+<script>
+// Auto-dismiss messages after specified time
+document.addEventListener('DOMContentLoaded', function() {
+    const messages = document.querySelectorAll('.message-alert');
+    
+    messages.forEach(function(message) {
+        // Set different timeout for different message types
+        let timeout = 5000; // Default 5 seconds
+        
+        if (message.classList.contains('bg-green-100')) {
+            timeout = 4000; // Success messages: 4 seconds
+        } else if (message.classList.contains('bg-red-100')) {
+            timeout = 7000; // Error messages: 7 seconds (longer to read)
+        } else if (message.classList.contains('bg-yellow-100')) {
+            timeout = 6000; // Warning messages: 6 seconds
+        } else if (message.classList.contains('bg-blue-100')) {
+            timeout = 5000; // Info messages: 5 seconds
+        }
+        
+        // Auto-dismiss after timeout
+        setTimeout(function() {
+            dismissMessage(message);
+        }, timeout);
+    });
+});
+
+// Function to close message manually
+function closeMessage(button) {
+    const message = button.closest('.message-alert');
+    dismissMessage(message);
+}
+
+// Function to dismiss message with animation
+function dismissMessage(message) {
+    message.style.opacity = '0';
+    message.style.transform = 'translateX(100%)';
+    
+    setTimeout(function() {
+        if (message.parentNode) {
+            message.parentNode.removeChild(message);
+        }
+    }, 500); // Wait for animation to complete
+}
+</script>
