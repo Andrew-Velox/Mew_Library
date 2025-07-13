@@ -86,11 +86,18 @@ WSGI_APPLICATION = 'Mew_Library.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        # Feel free to alter this value to suit your needs.
+        default='postgresql://mew_library_user:4CT2OlrPruB844leqZYjPNqYXeK4AgOx@dpg-d1psbtadbo4c73bssajg-a.oregon-postgres.render.com/mew_library',
+    )
 }
 
 
