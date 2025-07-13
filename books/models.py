@@ -13,8 +13,8 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2)
     categories = models.ForeignKey(BookCategory, on_delete=models.CASCADE)
     image  = models.ImageField(upload_to='books/media/uploads/')
-    raings = models.CharField(max_length=12,choices=BOOK_RATINGS,null=True,blank=True)
-    quantity = models.IntegerField(max_length=12,null=True,blank=True)
+    ratings = models.CharField(max_length=12,choices=BOOK_RATINGS,null=True,blank=True)
+    quantity = models.IntegerField(null=True,blank=True)
 
 
     def __str__(self):
