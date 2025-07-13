@@ -18,12 +18,12 @@ from django.contrib.auth.decorators import login_required
 class UserRegistrationView(FormView):
     template_name = 'account/user_registration.html'
     form_class= UserRegistrationForm
-    success_url = reverse_lazy("homepage")
+    success_url = reverse_lazy("profile")
 
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        messages.success(self.request, f"Account Created Successfull")
+        messages.success(self.request, f"Account Created Successfully")
         return super().form_valid(form)
 
 
